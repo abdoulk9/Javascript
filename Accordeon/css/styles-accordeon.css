@@ -1,0 +1,24 @@
+*{
+            box-sizing: border-box;
+        }
+        .menu {
+            width: 350px;
+        }
+        
+        .menu-header {
+            background-color: black;
+            color: white;
+            text-align: center;
+            width: 100%;
+            margin: 0;
+            padding: 5px;
+            cursor: pointer;
+            border: 1px solid white;
+        }
+        
+        .menu ul {
+            background-color: burlywood;
+            list-style-type: none;
+            margin: 0;
+            padding: 5px;
+        }

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Random User</title>
+  <script src="lib/jquery-3.3.1.js"></script>
+  <script>
+    
+    function renderTable(data){
+      var $tbody = $("#persons tbody");
+      
+      for(person of data){
+        $tbody.append(renderRow(person));
+      }
+    }
+    
+    function renderRow(data){
+      var $row = $("<tr></tr>");
+      
+      $row.append(renderImageCell(data.picture.large));
+      $row.append(renderTextCell(data.name.first));
+      $row.append(renderTextCell(data.name.last));
+      $row.append(renderTextCell(data.email));
+      
+      return $row;
+      
+    }
+    
+    function renderTextCell(data){
+      var $cell = $("<td></td>");
+      $cell.html(data);
+      return $cell;
+    }
+    
+    function renderImageCell(data){
+      var $img = $("<img></img>").attr("src", data);
+      return renderTextCell($img);
+    }
+    
+    $(document).ready(function() {
+
+      $("#validate").click(function() {
+        $.get(
+          "https://randomuser.me/api", {
+            gender: $("input[name='sex']:checked").val(),
+            nat: $("#countryChoice").val(),
+            results: 20
+          },
+          function(response) {
+            console.log(response);
+            
+            //Affichage de toutes les personnes dans un tableau
+            renderTable(response.results);
+          }
+        ); //Fin de la requête Ajax
+        
+        console.log("fin de la requête")
+      }); //Fin de l'évenement click
+
+
+
+    });
+  </script>
+</head>
+
+<body>
+  <!--
+  <select id="sexChoice">
+    <option value="female">Femme</option>
+    <option value="male">Homme</option>
+  </select>
+ -->
+
+
+  <select id="countryChoice">
+    <option value="AU">Australie</option>
+    <option value="BR">Brazil</option>
+    <option value="CA">Canada</option>
+    <option value="CH">Suisse</option>
+    <option value="DE">Allemagne</option>
+    <option value="ES">Espagne</option>
+    <option value="DK">Danemark</option>
+    <option value="FI">Finlande</option>
+    <option value="FR">France</option>
+    <option value="GB">Grande Bretagne</option>
+    <option value="IE">Irlande</option>
+    <option value="IR">Iran</option>
+    <option value="NO">Norvège</option>
+    <option value="NL">Hollande</option>
+    <option value="NZ">Nouvelle Zélande</option>
+  </select>
+  <input type="radio" name="sex" value="female">
+  <label>Femme</label>
+  <input type="radio" name="sex" value="male">
+  <label>Homme</label>
+
+  <button id="validate">Envoyer</button>
+
+ 
+
+  <table id="persons">
+    <thead>
+      <tr>
+        <th>photo</th>
+        <th>Prénom</th>
+        <th>Nom</th>
+        <th>email</th>
+      </tr>
+    </thead>
+    
+    <tbody></tbody>
+  </table>
+
+</body>
+
+</html>
