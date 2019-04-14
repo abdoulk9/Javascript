@@ -32,14 +32,9 @@ function flipCard() {
 }
 //Verification de l'egalité des cartes
 function checkFormat() {
-     if(firstCard.data.framework === secondCard.data.framework){
-         disableCards();
-         return;
-     }
-     unflipCards();
 
-//    let isMacth = firstCard.dataset.name === secondCard.dataset.name;
-//    isMacth ? disableCards() : unflipCards();
+    let isMacth = firstCard.dataset.framwork === secondCard.dataset.framework;
+    isMacth ? disableCards() : unflipCards();
 }
 
 function disableCards() {
