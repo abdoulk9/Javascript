@@ -1,0 +1,157 @@
+body{
+    background-color: whitesmoke;
+    width: 100%;
+    font-family: sans-serif;
+    padding-left: 20px;
+}
+
+h1{
+    background-color: white;
+    color:green;
+    padding: 5px;
+    border-radius: 5px;
+    width: 830px;
+    box-shadow: 0px 0px 2px 2px rgba(0, 128, 0, 0.863);
+}
+
+div#shop{
+    width: 600px;
+}
+
+div.article{
+    width: 32.5%;
+    position: relative;
+    text-align:center ;
+    height: 240px;
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.747) ;
+    box-shadow: 0px 0px 6px 2px green;
+    border-radius: 5px;
+    margin: 2px 2px;
+}
+div.article figure, div.article div.description {
+    box-shadow: 0px 0px 4px 2px rgba(0, 128, 0, 0.829) inset;
+    border-radius: 4px;
+}
+div.article .class_img{
+    width: 150px;
+    height: 130px;
+    border: 2px solid green;
+    border-radius: 5px;
+    margin: 2px ;
+}
+div.article figure{
+    margin: auto;
+    width: 30%;
+    height: 180px;
+    text-align: center;
+}
+/*div.article figure img {
+    margin: 5px;
+    height: 30%;
+}*/
+div.article h4{
+    color:black;
+    text-align: left;
+    font-size: 12px;
+    margin: 0;
+    padding: 5px 10px;
+}
+div.article div.description, div.control{
+    vertical-align: middle;
+    display: inline-block;
+}
+div.article div.description {
+    height: 58px;
+    width: 80px;
+    text-align: left;
+    font-size: 10px;
+    background-color: white;
+    margin: 2px 4px 2px 2px;
+    padding: 4px 6px; 
+}
+div.article div.prix{
+    position: absolute;
+    top: 35px;
+    right: 40px;
+    font-size: 12px;
+    display: inline-block;
+    background-color: red;
+    color: white;
+    padding: 3px;
+    border-radius: 3px;
+}
+div.prix::after {
+    content: " €/kg";
+}
+#montant::after{
+    content: " €";
+}
+
+div#shopping_list, div#shop{
+    background-color: honeydew;
+   display: inline-block;
+    vertical-align: middle;
+    height: 550px;
+}
+
+button.commander{
+    width: 25px;
+    height: 25px;
+    background-size: cover;
+    border: solid 2px white;
+}
+button.commander{
+    background-image: url("../img/icons/panier.jpg");
+}
+
+input[type="number"]{
+    width: 40px;
+    font-size: 13px;
+    text-align: center;
+    border: none;
+    background-color: honeydew;
+}
+div.article div.control{
+    width: 50px;
+    box-shadow: 0px 0px 2px 1px green;
+    background-color: honeydew;
+    text-align: center;
+    border-radius: 5px;
+}
+div.control button, div.control input{
+    display:block ;
+    margin: 7px auto;
+    border-radius: 5px;
+}
+
+
+ div.purchases, div#shop{
+   overflow:auto;
+}
+
+div#shopping_list, div#shop{
+    box-shadow: 0px 0px 2px 2px green;
+    padding: 2px;
+    border-radius: 4px;
+}
+div.purchases{
+    height: 480px;
+    border: solid thin green;
+    padding: 2px;
+    border-radius: 5px;
+}
+div#purchases{
+    width: 235px;
+    text-align: center;
+}
+input#filter{
+    width: 95%;
+    padding: 5px;
+}
+div#shopping_list{
+    width: 235px;
+    text-align: center;
+}
+
+
