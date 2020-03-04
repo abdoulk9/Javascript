@@ -4,6 +4,7 @@ const articleIdKey = "article";
 const orderIdKey = "order";
 const inputIdKey = "qty";
 var quantityId = "";
+
 const catalog = [
     {
         "name": "Abricot",
@@ -147,32 +148,75 @@ const createOrderControlBlock = function (index) {
     input.max = maxQty.toString();
     control.appendChild(input);
 
+
     //Create order button
     var button = document.createElement("button");
     button.className = "commander";
     button.id = index + "-" + orderIdKey;
+    button.style.opacity = 0.25;
     control.appendChild(button);
+
+    input.addEventListener("keyup", function () {
+        if (isNaN(input.value)) {
+            alert("cette valeur n'est pas un nbre");
+            input.value = "0";
+        } if (input.value > maxQty) {
+            input.value = "0";
+            alert("Commande maximum 10Kg/produit!");
+        }
+    });
+    input.addEventListener("change", function () {
+        if (input.value > input.min) {
+            button.style.opacity = 1;
+            var buttonCde = document.getElementById(index +"-"+orderIdKey);
+              alert(buttonCde.outerHTML);
+            // var article = div.description.textContent;
+          buttonCde.addEventListener("click", function(){
+              var article;
+                for(var i =0; i < catalog.length; i++){
+                       if(i === index){
+                           article = catalog[i];
+                           console.log(article);
+                       }
+                }
+               createPurchaseBlock(article, index);
+            });
+        } else {
+            button.style.opacity = 0.25;
+        }
+    });
     return control;
 }
 
-const activeButtonCommander = function (element) {
-    return element.style.opacity = "opacity : 1";
-}
 
-
-const createPurchase = function (article, index) {
+var purchases = document.getElementById("purchases");
+const createPurchaseBlock = function (article, index) {
     var block = document.createElement('div');
     block.className = "purchase";
     block.id = index + "-" + articleIdKey;
     block.appendChild(createFigureBlock(article));
     block.appendChild(createBlock("h4", article.name));
-    block.appendChild(createDiv("div", "qty"));
-    block.appendChild(createDiv("div", "prix"));
-    var purchases = document.getElementById("purchases");
-    this.appendChild(block);
+    block.appendChild(createElementHtml("div", "qty"));
+    block.appendChild(createElementHtml("div", "prix"));
+    
+   // purchases.appendChild(block);
+
+    /* Create button remove */
+    var controlDiv = document.createElement("div");
+      controlDiv.className = "control";
+    var button = document.createElement("button");
+    button.className = "remove";
+    button.id = index + "-" + "remove";
+    controlDiv.append(button);
+    block.appendChild(controlDiv);
+    console.log(block.outerHTML);
+    purchases.appendChild(block);
+    
     return purchases;
 }
-const createDiv = function (tag, name) {
+
+
+const createElementHtml = function (tag, name) {
     var element = document.createElement(tag);
     element.className = name;
     return element;
@@ -191,8 +235,8 @@ filter.addEventListener("keyup", function () {
     let colorDisplay;
     for (var i = 0; i < catalog.length; i++) {
         if (catalog[i].name.indexOf(filter.value) === 0) {
-            catalogFilter.push(catalog[i]);
             colorDisplay = "green";
+            catalogFilter.push(catalog[i]);
             input.style.backgroundColor = colorDisplay;
         } else if (catalog[i].name.indexOf(filter.value) === -1) {
             colorDisplay = "red";
