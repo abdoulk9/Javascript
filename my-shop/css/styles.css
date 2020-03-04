@@ -25,8 +25,8 @@ div.article{
     height: 240px;
     display: inline-block;
     background-color: rgba(255, 255, 255, 0.747) ;
-    box-shadow: 0px 0px 6px 2px green;
-    border-radius: 5px;
+    /*box-shadow: 0px 0px 6px 2px green;*/
+    border-radius: 10px;
     margin: 2px 2px;
 }
 div.article figure, div.article div.description {
@@ -36,7 +36,7 @@ div.article figure, div.article div.description {
 div.article .class_img{
     width: 150px;
     height: 130px;
-    border: 2px solid green;
+    /*border: 2px solid green;*/
     border-radius: 5px;
     margin: 2px ;
 }
@@ -88,7 +88,7 @@ div.prix::after {
     content: " €";
 }
 
-div#shopping_list, div#shop{
+div#shopping, div#shop{
     background-color: honeydew;
    display: inline-block;
     vertical-align: middle;
@@ -100,6 +100,7 @@ button.commander{
     height: 25px;
     background-size: cover;
     border: solid 2px white;
+    /*opacity: 0.25;*/
 }
 button.commander{
     background-image: url("../img/icons/panier.jpg");
@@ -130,28 +131,30 @@ div.control button, div.control input{
    overflow:auto;
 }
 
-div#shopping_list, div#shop{
+div#shopping, div#shop{
     box-shadow: 0px 0px 2px 2px green;
     padding: 2px;
     border-radius: 4px;
 }
-div.purchases{
+div#purchases{
     height: 480px;
     border: solid thin green;
     padding: 2px;
     border-radius: 5px;
 }
 div#purchases{
-    width: 235px;
+    width: 230px;
     text-align: center;
 }
 input#filter{
     width: 95%;
     padding: 5px;
 }
-div#shopping_list{
+div#shopping{
     width: 235px;
     text-align: center;
 }
+
+/*div.purchase*/
 
 
