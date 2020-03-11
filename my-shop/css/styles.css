@@ -192,11 +192,12 @@ div.purchase div.control{
 .purchase img{
     width: 32px;
 }
-.purchase .prix, .purchase.qty{
+.purchase .prix, .purchase .qty{
     font-size: 11px;
 }
-.purchase .prix{
-    margin-right: 4px;
+.purchase .prix:after{
+    content: "€";
+    margin-right: 10px;
 }
 .purchase .qty:after{
     content: "x";

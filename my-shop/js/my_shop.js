@@ -1,9 +1,13 @@
 
+
+
 const maxQty = 10;
 const articleIdKey = "article";
 const orderIdKey = "order";
 const inputIdKey = "qty";
+const purchaseIdKey = "purchase";
 var quantityId = "";
+var TotalCoast;
 
 const catalog = [
     {
@@ -76,20 +80,20 @@ const catalog = [
 
 
 /*  ----global variable which represent the total
-    coast of selected products--- 
+        coast of selected products
 */
 var total = 0;
 
 //Function called when page is loaded
-var init = function () {
+var init = () => {
     createShop();
 }
 
 window.addEventListener("load", init);
 
 /* */
-var createShop = function () {
-    var shop = document.getElementById("shop");
+var createShop = () => {
+    let shop = document.getElementById("shop");
     for (var i = 0; i < catalog.length; i++) {
         shop.appendChild(createProduct(catalog[i], i));
     }
@@ -97,8 +101,8 @@ var createShop = function () {
 
 
 /* Create a div article*/
-const createProduct = function (article, index) {
-    const block = document.createElement("div");
+var createProduct = (article, index) => {
+    let block = document.createElement("div");
     block.className = "article";
     block.id = index + "-" + articleIdKey;
     block.appendChild(createBlock('h4', article.name));
@@ -110,7 +114,7 @@ const createProduct = function (article, index) {
 }
 
 /* Create a figure block for a article*/
-const createFigureBlock = function (article) {
+var createFigureBlock = (article) => {
     let figure = document.createElement("figure");
     let img = document.createElement('img');
     img.className = "class_img";
@@ -123,7 +127,7 @@ const createFigureBlock = function (article) {
 }
 
 /* Create a block */
-const createBlock = function (tag, content, cssClass) {
+var createBlock = (tag, content, cssClass) => {
     let element = document.createElement(tag);
     if (cssClass != undefined) {
         element.className = cssClass;
@@ -134,12 +138,12 @@ const createBlock = function (tag, content, cssClass) {
 
 
 /* Create a control order */
-const createOrderControlBlock = function (index) {
-    var control = document.createElement("div");
+var createOrderControlBlock = (index) => {
+    let control = document.createElement("div");
     control.className = "control";
 
     //Create input qty element
-    var input = document.createElement("input");
+    let input = document.createElement("input");
     input.id = index + "-" + inputIdKey;
     input.type = "number";
     input.step = "1";
@@ -156,81 +160,132 @@ const createOrderControlBlock = function (index) {
     button.style.opacity = 0.25;
     control.appendChild(button);
 
-    input.addEventListener("keyup", function () {
+    /*Control the input values*/
+    input.addEventListener("keyup", () => {
         if (isNaN(input.value)) {
             alert("cette valeur n'est pas un nbre");
             input.value = "0";
         } if (input.value > maxQty) {
+            alert("Commande maximum: 10Kg/produit!");
             input.value = "0";
-            alert("Commande maximum 10Kg/produit!");
         }
     });
-    input.addEventListener("change", function () {
+
+    input.addEventListener("change", () => {
+        let articleSelected = "";
+        let quantityArt = 0;
         if (input.value > input.min) {
+            quantityArt = parseInt(input.value);
             button.style.opacity = 1;
-            var buttonCde = document.getElementById(index +"-"+orderIdKey);
-              alert(buttonCde.outerHTML);
-            // var article = div.description.textContent;
-          buttonCde.addEventListener("click", function(){
-              var article;
-                for(var i =0; i < catalog.length; i++){
-                       if(i === index){
-                           article = catalog[i];
-                           console.log(article);
-                       }
+            let buttonCde = document.getElementById(index + "-" + orderIdKey);
+            let idOrder = (index + "-" + orderIdKey);
+
+            console.log(` id de la selection ${idOrder}`);
+
+            /* function create ship*/
+            var createShip = () => {
+                let shipPrice = 0;
+                for (var i = 0; i < catalog.length; i++) {
+                    if (index === i) {
+                        articleSelected = catalog[i];
+                        createPurchaseBlock(articleSelected, index, quantityArt);
+                        shipPrice = articleSelected.price;
+                    }
                 }
-               createPurchaseBlock(article, index);
-            });
-        } else {
+                TotalCoast = document.getElementById("montant");
+                TotalCoast.textContent = Number(TotalCoast.textContent) + shipPrice;
+            }
+
+            /*Function calculate update the price */
+            let calculatePrice = (qty, price) => {
+                (qty > 1) ? price = qty * price : price;
+                return price;
+            }
+
+            buttonCde.addEventListener("click", () => {
+                let purchasesItems = document.getElementById("purchases");
+                let purchaseItems = purchasesItems.getElementsByClassName('purchase');
+
+                /* For the first selectionne they are not article in shopping box  */
+                if (purchaseItems.length === 0) {
+                    createShip();
+
+                } else { /* At less one element in shopping box*/
+                    let indice = 0;
+                    let initialSize = purchaseItems.length;
+                    while (indice <= initialSize) {
+                        console.log(`L'indice tableau : ${indice}`);
+                        if (purchaseItems[indice].id[0] === idOrder[0]) {
+                            console.log(`Id selection article: ${idOrder}`);
+                        } else {
+                            createShip();
+                            // console.log(`on a ${purchaseItems.length} produit(s) dans le panier`);
+                        }
+                        purchaseItems.length = initialSize;
+                        indice++;
+                    }
+                }
+                input.value = "0";
+                button.style.opacity = 0.25;
+            });//End of click commander
+
+        }//End of block if input.value
+        else {
             button.style.opacity = 0.25;
         }
-    });
+    });//End of change
     return control;
 }
 
 
-var purchases = document.getElementById("purchases");
-const createPurchaseBlock = function (article, index) {
-    var block = document.createElement('div');
+
+/*Function */
+let purchases = document.getElementById("purchases");
+var createPurchaseBlock = (article, index, qty) => {
+    console.log(`Dans createpurchase le qty vaut:${qty}`);
+    let block = document.createElement('div');
     block.className = "purchase";
-    block.id = index + "-" + articleIdKey;
+    block.id = index + "-" + purchaseIdKey;
     block.appendChild(createFigureBlock(article));
     block.appendChild(createBlock("h4", article.name));
-    block.appendChild(createElementHtml("div", "qty"));
-    block.appendChild(createElementHtml("div", "prix"));
-    
-   // purchases.appendChild(block);
+    block.appendChild(createBlock("div", qty, "qty"));
+    block.appendChild(createBlock("div", article.price, "prix"));
 
     /* Create button remove */
-    var controlDiv = document.createElement("div");
-      controlDiv.className = "control";
-    var button = document.createElement("button");
+    let controlDiv = document.createElement("div");
+    controlDiv.className = "control";
+    let button = document.createElement("button");
     button.className = "remove";
     button.id = index + "-" + "remove";
+    button.click = removeItem();
     controlDiv.append(button);
     block.appendChild(controlDiv);
-    console.log(block.outerHTML);
     purchases.appendChild(block);
-    
     return purchases;
 }
 
-
-const createElementHtml = function (tag, name) {
-    var element = document.createElement(tag);
-    element.className = name;
-    return element;
+/*Remove an element*/
+var removeItem = () => {
+    document.addEventListener('click', (e) => {
+        let str = e.target.id;
+        let indice = str[0];
+        let idRemove = indice + "-" + "remove";
+        if (str === idRemove) {
+            let idArticle = indice + "-" + purchaseIdKey;
+            let selectedArticle = document.getElementById(idArticle);
+            let itemPrice = selectedArticle.getElementsByClassName("prix")[0].textContent;
+            TotalCoast.textContent = Number(TotalCoast.textContent) - itemPrice;
+            selectedArticle.innerHTML = "";
+        }
+    });
 }
 
-
-
-
 /* Function to search a article*/
-const input = document.querySelector("input");
-const filter = document.getElementById("filter");
-const shop = document.getElementById("shop");
+let input = document.querySelector("input");
+let filter = document.getElementById("filter");
+let shop = document.getElementById("shop");
 
-filter.addEventListener("keyup", function () {
+filter.addEventListener("keyup", () => {
     let catalogFilter = [];
     let colorDisplay;
     for (var i = 0; i < catalog.length; i++) {
