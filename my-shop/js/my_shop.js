@@ -1,16 +1,13 @@
-
-
-
 const maxQty = 10;
 const articleIdKey = "article";
 const orderIdKey = "order";
 const inputIdKey = "qty";
 const purchaseIdKey = "purchase";
+const removeIdKey = "remove";
 var quantityId = "";
 var TotalCoast;
 
-const catalog = [
-    {
+const catalog = [{
         "name": "Abricot",
         "description": "Produit du verger St paul",
         "image": "/img/fruits/abricot.jpg",
@@ -84,7 +81,7 @@ const catalog = [
 */
 var total = 0;
 
-//Function called when page is loaded
+
 var init = () => {
     createShop();
 }
@@ -113,7 +110,7 @@ var createProduct = (article, index) => {
     return block;
 }
 
-/* Create a figure block for a article*/
+
 var createFigureBlock = (article) => {
     let figure = document.createElement("figure");
     let img = document.createElement('img');
@@ -126,7 +123,7 @@ var createFigureBlock = (article) => {
     return figure.appendChild(img);
 }
 
-/* Create a block */
+
 var createBlock = (tag, content, cssClass) => {
     let element = document.createElement(tag);
     if (cssClass != undefined) {
@@ -137,7 +134,7 @@ var createBlock = (tag, content, cssClass) => {
 }
 
 
-/* Create a control order */
+
 var createOrderControlBlock = (index) => {
     let control = document.createElement("div");
     control.className = "control";
@@ -160,57 +157,42 @@ var createOrderControlBlock = (index) => {
     button.style.opacity = 0.25;
     control.appendChild(button);
 
-    /*Control the input values*/
-    input.addEventListener("keyup", () => {
-        if (isNaN(input.value)) {
+    inputKeyup(input);
+    inputValueChange(input, button, index);
+
+    return control;
+}
+
+var inputKeyup = (itemHtml) => {
+    itemHtml.addEventListener("keyup", () => {
+        if (isNaN(itemHtml.value)) {
             alert("cette valeur n'est pas un nbre");
-            input.value = "0";
-        } if (input.value > maxQty) {
+            itemHtml.value = "0";
+        }
+        if (itemHtml.value > maxQty) {
             alert("Commande maximum: 10Kg/produit!");
-            input.value = "0";
+            itemHtml.value = "0";
         }
     });
+}
 
-    input.addEventListener("change", () => {
+var inputValueChange = (itemHtml, buttonHtml, position) => {
+
+    itemHtml.addEventListener("change", () => {
         let articleSelected = "";
         let quantityArt = 0;
-        if (input.value > input.min) {
-            quantityArt = parseInt(input.value);
-            button.style.opacity = 1;
-            let buttonCde = document.getElementById(index + "-" + orderIdKey);
-            let idOrder = (index + "-" + orderIdKey);
-
-            console.log(` id de la selection ${idOrder}`);
-
-            /* function create ship*/
-            var createShip = () => {
-                let shipPrice = 0;
-                for (var i = 0; i < catalog.length; i++) {
-                    if (index === i) {
-                        articleSelected = catalog[i];
-                        createPurchaseBlock(articleSelected, index, quantityArt);
-                        shipPrice = articleSelected.price;
-                    }
-                }
-                TotalCoast = document.getElementById("montant");
-                TotalCoast.textContent = Number(TotalCoast.textContent) + shipPrice;
-            }
-
-            /*Function calculate update the price */
-            let calculatePrice = (qty, price) => {
-                (qty > 1) ? price = qty * price : price;
-                return price;
-            }
+        if (itemHtml.value > itemHtml.min) {
+            quantityArt = parseInt(itemHtml.value);
+            buttonHtml.style.opacity = 1;
+            let buttonCde = document.getElementById(buttonHtml.id);
+            let idOrder = (buttonHtml.id);
 
             buttonCde.addEventListener("click", () => {
                 let purchasesItems = document.getElementById("purchases");
                 let purchaseItems = purchasesItems.getElementsByClassName('purchase');
-
-                /* For the first selectionne they are not article in shopping box  */
                 if (purchaseItems.length === 0) {
-                    createShip();
-
-                } else { /* At less one element in shopping box*/
+                    createShip(position, articleSelected, quantityArt);
+                } else {
                     let indice = 0;
                     let initialSize = purchaseItems.length;
                     while (indice <= initialSize) {
@@ -218,28 +200,44 @@ var createOrderControlBlock = (index) => {
                         if (purchaseItems[indice].id[0] === idOrder[0]) {
                             console.log(`Id selection article: ${idOrder}`);
                         } else {
-                            createShip();
-                            // console.log(`on a ${purchaseItems.length} produit(s) dans le panier`);
+                            createShip(position, articleSelected, quantityArt);
                         }
                         purchaseItems.length = initialSize;
                         indice++;
                     }
                 }
-                input.value = "0";
-                button.style.opacity = 0.25;
-            });//End of click commander
-
-        }//End of block if input.value
-        else {
-            button.style.opacity = 0.25;
+                itemHtml.value = "0";
+                buttonHtml.style.opacity = 0.25;
+            });
+        } else {
+            buttonHtml.style.opacity = 0.25;
         }
-    });//End of change
-    return control;
+    });
 }
 
 
 
-/*Function */
+var calculatePrice = (qty, price) => {
+    (qty > 1) ? price = qty * price: price;
+    return price;
+}
+
+var createShip = (id, article, qtyArticle) => {
+    console.log('Dans create ship');
+    let shipPrice = 0;
+    for (var i = 0; i < catalog.length; i++) {
+        console.log('dans la boucle ship');
+        if (id === i) {
+            article = catalog[i];
+            createPurchaseBlock(article, id, qtyArticle);
+            shipPrice = article.price;
+        }
+    }
+    TotalCoast = document.getElementById("montant");
+    TotalCoast.textContent = Number(TotalCoast.textContent) + shipPrice;
+}
+
+
 let purchases = document.getElementById("purchases");
 var createPurchaseBlock = (article, index, qty) => {
     console.log(`Dans createpurchase le qty vaut:${qty}`);
@@ -256,7 +254,7 @@ var createPurchaseBlock = (article, index, qty) => {
     controlDiv.className = "control";
     let button = document.createElement("button");
     button.className = "remove";
-    button.id = index + "-" + "remove";
+    button.id = index + "-" + removeIdKey;
     button.click = removeItem();
     controlDiv.append(button);
     block.appendChild(controlDiv);
@@ -264,18 +262,22 @@ var createPurchaseBlock = (article, index, qty) => {
     return purchases;
 }
 
-/*Remove an element*/
+
 var removeItem = () => {
     document.addEventListener('click', (e) => {
         let str = e.target.id;
         let indice = str[0];
-        let idRemove = indice + "-" + "remove";
+        let idRemove = indice + "-" + removeIdKey;
         if (str === idRemove) {
             let idArticle = indice + "-" + purchaseIdKey;
             let selectedArticle = document.getElementById(idArticle);
-            let itemPrice = selectedArticle.getElementsByClassName("prix")[0].textContent;
-            TotalCoast.textContent = Number(TotalCoast.textContent) - itemPrice;
+            let itemPrice = selectedArticle.getElementsByClassName("prix")[0];
+            console.log(itemPrice.length);
+            console.log(itemPrice.textContent);
+            TotalCoast.textContent = Number(TotalCoast.textContent) - Number(itemPrice.textContent);
             selectedArticle.innerHTML = "";
+            selectedArticle.backgroundColor = "white";
+
         }
     });
 }
@@ -310,4 +312,3 @@ filter.addEventListener("keyup", () => {
         shop.appendChild(createProduct(catalogFilter[i], i));
     }
 });
-
